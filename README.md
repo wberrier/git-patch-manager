@@ -10,9 +10,9 @@ and git rebase workflows to provide a quilt-like workflow.
 
 # Features
 
-* [ ] managed from a single configuration file
-* [ ] multiple "stacks" and/or "series" within a git repository
-* [ ] re-generate patches and series files (ie: quilt refresh)
+* [x] managed from a single configuration file
+* [x] multiple "stacks" and/or "series" within a git repository
+* [x] re-generate patches and series files (ie: quilt refresh)
 * [ ] apply patches via "git am" for multiple "stacks"
 * [ ] verification that generated patches produce desired result
 

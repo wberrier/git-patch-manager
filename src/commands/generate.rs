@@ -1,28 +1,24 @@
-use anyhow::{Result, anyhow};
-
-use crate::subprocess::*;
+use anyhow::Result;
 
 use super::super::config::{find_root_dir, get_options, StackConfig};
+use super::super::git::format_patches;
+use super::super::series::*;
 
-fn process_stack(base_path: &std::path::PathBuf, stack_config: &StackConfig, base_branch: &String) -> Result<()> {
-    let mut src_dir = base_path.clone();
-    let output_dir = stack_config.output_directory.clone();
+fn process_stack(
+    base_path: &std::path::Path,
+    stack_config: &StackConfig,
+    base_branch: &str,
+) -> Result<()> {
+    let mut src_dir = base_path.to_path_buf();
+    let output_dir = &stack_config.output_directory;
 
     src_dir.push(stack_config.src_path.clone());
 
-    // Generate all the patches from this directory
-    let command = format!("git format-patch -o {} {} -- {}", output_dir.to_string_lossy(), base_branch, src_dir.to_string_lossy());
-
-    // TODO: execute the command
-    let status = getstatus(command.as_str())?;
-
-    if !status.success() {
-        return Err(anyhow!("Error running {}", command));
-    }
-
+    let patches = format_patches(base_branch, &src_dir, &output_dir)?;
 
     // Generate the series file
-    // NOTE: is the series file necessary?  Likely, to control which patches get applied
+    let series = Series::new(output_dir, patches);
+    series.to_file()?;
 
     Ok(())
 }

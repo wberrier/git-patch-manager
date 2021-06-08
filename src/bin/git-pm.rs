@@ -16,6 +16,6 @@ fn main() -> Result<()> {
 
     // Handle the info sub command
     match subcommand_options {
-        PatchManagerCommands::Generate {} => return generate_patches(),
+        PatchManagerCommands::Generate {} => generate_patches(),
     }
 }

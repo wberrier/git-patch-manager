@@ -9,7 +9,7 @@ use std::io::Result;
 pub struct ShellProcess {}
 
 impl ShellProcess {
-    pub fn new(command: &str) -> std::process::Command {
+    pub fn new_process(command: &str) -> std::process::Command {
         let mut process = std::process::Command::new("/bin/sh");
         process.arg("-c").arg(command);
         process
@@ -26,7 +26,7 @@ impl ShellProcess {
 
 // Print output as it happens
 pub fn getstatus(command: &str) -> Result<ExitStatus> {
-    ShellProcess::new(command).status()
+    ShellProcess::new_process(command).status()
 }
 
 // Just get output, don't care about exit code
