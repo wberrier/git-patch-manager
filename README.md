@@ -32,3 +32,7 @@ and git rebase workflows to provide a quilt-like workflow.
 
 1. https://lists.nongnu.org/archive/html/quilt-dev/2007-01/msg00001.html
 
+# TODO
+
+* [ ] add some easy rusty unit tests for iterating
+
