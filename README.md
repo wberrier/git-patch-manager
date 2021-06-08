@@ -13,7 +13,7 @@ and git rebase workflows to provide a quilt-like workflow.
 * [x] managed from a single configuration file
 * [x] multiple "stacks" and/or "series" within a git repository
 * [x] re-generate patches and series files (ie: quilt refresh)
-* [ ] apply patches via "git am" for multiple "stacks"
+* [x] apply patches via "git am" for multiple "stacks"
 * [ ] verification that generated patches produce desired result
 
 # Other comparable tools

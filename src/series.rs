@@ -9,12 +9,12 @@ pub struct Series {
 }
 
 impl Series {
-    pub fn new(directory: &std::path::PathBuf, patch_files: Vec<std::path::PathBuf>) -> Self {
+    pub fn new(directory: &std::path::PathBuf) -> Self {
         let mut filepath = directory.clone();
         filepath.push(SERIES_FILENAME);
         Series {
-            filepath,
-            patch_files,
+            filepath: filepath,
+            patch_files: vec![],
         }
     }
 
@@ -30,13 +30,26 @@ impl Series {
         Ok(())
     }
 
-    pub fn from_file(&mut self) -> Result<()> {
-        let lines = std::fs::read_to_string(&self.filepath)?;
+    pub fn from_paths(&mut self, paths: &Vec<std::path::PathBuf>) -> Result<()> {
+        self.patch_files = paths.clone();
+        Ok(())
+    }
 
-        for line in lines.split('\n') {
+    pub fn from_text(&mut self, text: &str) -> Result<()> {
+        for line in text.split('\n') {
             self.patch_files.push(std::path::PathBuf::from(line));
         }
 
         Ok(())
+    }
+
+    pub fn from_file(&mut self) -> Result<()> {
+        let lines = std::fs::read_to_string(&self.filepath)?;
+
+        self.from_text(lines.as_str())
+    }
+
+    pub fn patch_files(&self) -> &Vec<std::path::PathBuf> {
+        &self.patch_files
     }
 }

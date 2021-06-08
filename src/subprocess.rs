@@ -4,7 +4,9 @@
 /// Maybe https://crates.io/crates/execute does everything I need?
 use std::process::ExitStatus;
 
-use std::io::Result;
+use std::io::Result as IOResult;
+
+use anyhow::{anyhow, Result};
 
 pub struct ShellProcess {}
 
@@ -25,7 +27,7 @@ impl ShellProcess {
 }
 
 // Print output as it happens
-pub fn getstatus(command: &str) -> Result<ExitStatus> {
+pub fn getstatus(command: &str) -> IOResult<ExitStatus> {
     ShellProcess::new_process(command).status()
 }
 
@@ -44,4 +46,16 @@ pub fn getstatusoutput(command: &str) -> Result<(ExitStatus, String)> {
         output.status,
         String::from_utf8_lossy(&output.stdout).to_string(),
     ))
+}
+
+// TODO: how to model all the above "get" functions with this behavior?
+// Also Return Err on non-success
+pub fn run_or_fail(command: &str) -> Result<ExitStatus> {
+    let status = ShellProcess::new_process(command).status()?;
+
+    if status.success() {
+        return Ok(status);
+    }
+
+    Err(anyhow!("Command failed: {}", command))
 }

@@ -16,9 +16,12 @@ fn process_stack(
 
     let patches = format_patches(base_branch, &src_dir, &output_dir)?;
 
-    // Generate the series file
-    let series = Series::new(output_dir, patches);
-    series.to_file()?;
+    // Generate the series file (if there are any)
+    if !patches.is_empty() {
+        let mut series = Series::new(output_dir);
+        series.from_paths(&patches)?;
+        series.to_file()?;
+    }
 
     Ok(())
 }

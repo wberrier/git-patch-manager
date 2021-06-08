@@ -38,3 +38,24 @@ pub fn format_patches(
 
     Ok(patches)
 }
+
+pub fn apply_patches(patch_files: &Vec<std::path::PathBuf>) -> Result<()> {
+    let mut command = "git am".to_string();
+
+    for p in patch_files {
+        command.push_str(format!(" {}", p.display()).as_str());
+    }
+
+    let status = getstatus(command.as_str())?;
+
+    if !status.success() {
+        return Err(anyhow!("Error running {}", command));
+    }
+
+    Ok(())
+}
+
+pub fn enter_detached() -> Result<()> {
+    run_or_fail("git checkout --detach")?;
+    Ok(())
+}
