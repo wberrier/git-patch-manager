@@ -7,24 +7,25 @@ use std::env;
 const CONFIG_FILE_NAME: &str = "git-pm.yaml";
 
 #[derive(Deserialize)]
-struct StackConfig {
-    src_path: std::path::PathBuf,
-    output_directory: std::path::PathBuf,
+pub struct StackConfig {
+    pub src_path: std::path::PathBuf,
+    pub output_directory: std::path::PathBuf,
 }
 
 #[derive(Deserialize)]
 pub struct Options {
-    base_branch: String,
-    stacks: Vec<StackConfig>,
+    pub base_branch: String,
+    pub stacks: Vec<StackConfig>,
 }
 
-fn find_config_file() -> Result<std::path::PathBuf> {
+pub fn find_root_dir() -> Result<std::path::PathBuf> {
     let mut current_dir = env::current_dir()?;
 
     while current_dir != std::path::Path::new("/") {
         let mut test = current_dir.clone();
         test.push(CONFIG_FILE_NAME);
         if test.exists() {
+            test.pop();
             return Ok(test);
         }
 
@@ -32,6 +33,12 @@ fn find_config_file() -> Result<std::path::PathBuf> {
     }
 
     Err(anyhow!("unable to find project root"))
+}
+
+fn find_config_file() -> Result<std::path::PathBuf> {
+    let mut config_file_path = find_root_dir()?;
+    config_file_path.push(CONFIG_FILE_NAME);
+    Ok(config_file_path)
 }
 
 pub fn get_options() -> Result<Options> {
