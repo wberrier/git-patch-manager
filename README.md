@@ -15,6 +15,8 @@ and git rebase workflows to provide a quilt-like workflow.
 * [x] re-generate patches and series files (ie: quilt refresh)
 * [x] apply patches via "git am" for multiple "stacks"
 * [ ] verification that generated patches produce desired result
+* [ ] patch validator (to make sure a patch only makes changes to files
+      within the stack source path)
 
 # Other comparable tools
 
@@ -36,3 +38,4 @@ and git rebase workflows to provide a quilt-like workflow.
 
 * [ ] add some easy rusty unit tests for iterating
 * [ ] integrate `git-version` into the StructOpt version
+* [ ] add some usage documentation
