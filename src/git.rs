@@ -39,11 +39,16 @@ pub fn format_patches(
     Ok(patches)
 }
 
-pub fn apply_patches(patch_files: &Vec<std::path::PathBuf>) -> Result<()> {
-    let mut command = "git am".to_string();
+pub fn apply_patches(
+    patch_directory: &std::path::Path,
+    patch_files: &[std::path::PathBuf],
+) -> Result<()> {
+    // Use 3way patch apply by default
+    let mut command = "git am --3way".to_string();
 
+    // Is it any faster to apply more than one patch at a time?
     for p in patch_files {
-        command.push_str(format!(" {}", p.display()).as_str());
+        command.push_str(format!(" {}/{}", patch_directory.display(), p.display()).as_str());
     }
 
     let status = getstatus(command.as_str())?;

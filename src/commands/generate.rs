@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use super::super::config::{find_root_dir, get_options, StackConfig};
+use super::super::config::{Options, StackConfig};
 use super::super::git::format_patches;
 use super::super::series::*;
 
@@ -19,18 +19,27 @@ fn process_stack(
     // Generate the series file (if there are any)
     if !patches.is_empty() {
         let mut series = Series::new(output_dir);
-        series.from_paths(&patches)?;
+
+        // Patches are relative to the series file, save just the filename
+        let new_patches: Vec<std::path::PathBuf> = patches
+            .iter()
+            .map(|patch| {
+                std::path::PathBuf::from(
+                    patch
+                        .file_name()
+                        .expect("Error getting filename from patch path"),
+                )
+            })
+            .collect();
+
+        series.from_paths(&new_patches)?;
         series.to_file()?;
     }
 
     Ok(())
 }
 
-pub fn generate_patches() -> Result<()> {
-    let options = get_options()?;
-
-    let base_path = find_root_dir()?;
-
+pub fn generate_patches(base_path: &std::path::Path, options: &Options) -> Result<()> {
     for stack in &options.stacks {
         process_stack(&base_path, &stack, &options.base_branch)?;
     }

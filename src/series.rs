@@ -9,11 +9,11 @@ pub struct Series {
 }
 
 impl Series {
-    pub fn new(directory: &std::path::PathBuf) -> Self {
-        let mut filepath = directory.clone();
+    pub fn new(directory: &std::path::Path) -> Self {
+        let mut filepath = directory.to_path_buf();
         filepath.push(SERIES_FILENAME);
         Series {
-            filepath: filepath,
+            filepath,
             patch_files: vec![],
         }
     }
@@ -30,8 +30,8 @@ impl Series {
         Ok(())
     }
 
-    pub fn from_paths(&mut self, paths: &Vec<std::path::PathBuf>) -> Result<()> {
-        self.patch_files = paths.clone();
+    pub fn from_paths(&mut self, paths: &[std::path::PathBuf]) -> Result<()> {
+        self.patch_files = paths.to_owned();
         Ok(())
     }
 
