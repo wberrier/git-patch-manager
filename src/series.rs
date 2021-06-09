@@ -1,6 +1,8 @@
 /// An abstraction around a series file
 use anyhow::Result;
 
+use crate::string::*;
+
 const SERIES_FILENAME: &str = "series";
 
 pub struct Series {
@@ -37,7 +39,12 @@ impl Series {
 
     pub fn from_text(&mut self, text: &str) -> Result<()> {
         for line in text.split('\n') {
-            self.patch_files.push(std::path::PathBuf::from(line));
+            // Remove everything past a comment character
+            let mut_line = everything_before(line, "#").trim().to_string();
+
+            if !mut_line.is_empty() {
+                self.patch_files.push(std::path::PathBuf::from(mut_line));
+            }
         }
 
         Ok(())

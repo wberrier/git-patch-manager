@@ -6,3 +6,4 @@ pub mod subprocess;
 
 mod git;
 mod series;
+pub mod string;
