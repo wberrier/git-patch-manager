@@ -35,4 +35,4 @@ and git rebase workflows to provide a quilt-like workflow.
 # TODO
 
 * [ ] add some easy rusty unit tests for iterating
-
+* [ ] integrate `git-version` into the StructOpt version
