@@ -1,7 +1,7 @@
 /// Make executing processes simpler in rust
 /// sort of modelling after the "subprocess" module in python
 
-/// Maybe https://crates.io/crates/execute does everything I need?
+/// TODO: use run_script or cmd_lib crate for this instead
 use std::process::ExitStatus;
 
 use std::io::Result as IOResult;
