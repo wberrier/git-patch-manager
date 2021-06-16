@@ -2,7 +2,7 @@
 
 // If necessary, eventually we could use git2 crate for a more programmatic approach
 
-use anyhow::{anyhow, Result};
+use anyhow::{bail, Result};
 
 use crate::subprocess::*;
 
@@ -25,7 +25,7 @@ pub fn format_patches(
     print!("{}", output);
 
     if !status.success() {
-        return Err(anyhow!("Error running {}", command));
+        bail!("Error running {}", command);
     }
 
     let mut patches = Vec::<std::path::PathBuf>::new();
@@ -54,7 +54,7 @@ pub fn apply_patches(
     let status = getstatus(command.as_str())?;
 
     if !status.success() {
-        return Err(anyhow!("Error running {}", command));
+        bail!("Error running {}", command);
     }
 
     Ok(())

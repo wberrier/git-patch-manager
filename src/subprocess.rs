@@ -6,7 +6,7 @@ use std::process::ExitStatus;
 
 use std::io::Result as IOResult;
 
-use anyhow::{anyhow, Result};
+use anyhow::{bail, Result};
 
 pub struct ShellProcess {}
 
@@ -57,5 +57,5 @@ pub fn run_or_fail(command: &str) -> Result<ExitStatus> {
         return Ok(status);
     }
 
-    Err(anyhow!("Command failed: {}", command))
+    bail!("Command failed: {}", command)
 }

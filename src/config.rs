@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{bail, Result};
 
 use serde::Deserialize;
 use std::env;
@@ -32,7 +32,7 @@ pub fn find_root_dir() -> Result<std::path::PathBuf> {
         current_dir.pop();
     }
 
-    Err(anyhow!("unable to find project root"))
+    bail!("unable to find project root")
 }
 
 fn find_config_file() -> Result<std::path::PathBuf> {
