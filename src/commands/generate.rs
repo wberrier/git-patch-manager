@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{bail, Result};
 
 use super::super::config::{Options, StackConfig};
 use super::super::git::format_patches;
@@ -34,6 +34,10 @@ fn process_stack(
 
         series.from_paths(&new_patches)?;
         series.to_file()?;
+
+    } else {
+        // Make sure that some patches were generated
+        bail!("no patches generated from: {:?}", stack_config.src_path)
     }
 
     Ok(())

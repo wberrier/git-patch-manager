@@ -51,9 +51,11 @@ impl Series {
     }
 
     pub fn from_file(&mut self) -> Result<()> {
-        let lines = std::fs::read_to_string(&self.filepath)?;
-
-        self.from_text(lines.as_str())
+        if let Ok(lines) = std::fs::read_to_string(&self.filepath) {
+            self.from_text(lines.as_str())
+        } else {
+            Err(anyhow::anyhow!("unable to read series file: {:?}", self.filepath))
+        }
     }
 
     pub fn patch_files(&self) -> &Vec<std::path::PathBuf> {
