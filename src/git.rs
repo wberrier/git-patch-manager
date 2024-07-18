@@ -14,7 +14,7 @@ pub fn format_patches(
 ) -> Result<Vec<std::path::PathBuf>> {
     // Generate all the patches from this directory
     let command = format!(
-        "git format-patch --no-numbered -o {} {} -- {}",
+        "git format-patch --no-numbered --zero-commit --no-stat -o {} {} -- {}",
         output_dir.to_string_lossy(),
         base_branch,
         src_dir.to_string_lossy()
