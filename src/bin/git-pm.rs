@@ -1,4 +1,4 @@
-use structopt::StructOpt;
+use clap::Parser;
 
 use anyhow::Result;
 
@@ -7,17 +7,17 @@ use git_patch_manager::commands::generate::generate_patches;
 
 use git_patch_manager::config::{find_root_dir, get_options};
 
-#[derive(Debug, StructOpt)]
-#[structopt(about, author)]
+#[derive(Debug, Parser)]
+#[clap(about, author)]
 enum PatchManagerCommands {
-    #[structopt(about = "generate patches")]
+    #[clap(about = "generate patches")]
     Generate {},
-    #[structopt(about = "apply patches")]
+    #[clap(about = "apply patches")]
     Apply {},
 }
 
 fn main() -> Result<()> {
-    let subcommand_options = PatchManagerCommands::from_args();
+    let subcommand_options = PatchManagerCommands::parse();
 
     // Change to the repo root
     let base_path = find_root_dir()?;
