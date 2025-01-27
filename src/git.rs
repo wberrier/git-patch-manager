@@ -2,9 +2,9 @@
 
 // If necessary, eventually we could use git2 crate for a more programmatic approach
 
-use anyhow::{bail, Result};
+use anyhow::Result;
 
-use crate::subprocess::*;
+use shleazy::*;
 
 // Return a list of generated patches
 pub fn format_patches(
@@ -20,17 +20,13 @@ pub fn format_patches(
         src_dir.to_string_lossy()
     );
 
-    let (status, output) = getstatusoutput(command.as_str())?;
+    let output = getoutput_shell_or_err(command)?;
 
-    print!("{}", output);
-
-    if !status.success() {
-        bail!("Error running {}", command);
-    }
+    print!("{:?}", output);
 
     let mut patches = Vec::<std::path::PathBuf>::new();
 
-    for line in output.split('\n') {
+    for line in String::from_utf8_lossy(&output).split('\n') {
         if !line.is_empty() {
             patches.push(std::path::PathBuf::from(line));
         }
@@ -51,16 +47,9 @@ pub fn apply_patches(
         command.push_str(format!(" {}/{}", patch_directory.display(), p.display()).as_str());
     }
 
-    let status = getstatus(command.as_str())?;
-
-    if !status.success() {
-        bail!("Error running {}", command);
-    }
-
-    Ok(())
+    run_shell_or_err(command)
 }
 
 pub fn enter_detached() -> Result<()> {
-    run_or_fail("git checkout --detach")?;
-    Ok(())
+    run_shell_or_err("git checkout --detach")
 }
