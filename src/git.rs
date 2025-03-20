@@ -2,7 +2,7 @@
 
 // If necessary, eventually we could use git2 crate for a more programmatic approach
 
-use anyhow::Result;
+use anyhow::{bail, Result};
 
 use shleazy::*;
 
@@ -39,6 +39,11 @@ pub fn apply_patches(
     patch_directory: &std::path::Path,
     patch_files: &[std::path::PathBuf],
 ) -> Result<()> {
+    // bail, otherwise git-am waits for a patch on stdin
+    if patch_files.is_empty() {
+        bail!("no patches to apply");
+    }
+
     // Use 3way patch apply by default
     let mut command =
         "git am --committer-date-is-author-date --3way --whitespace=nowarn --ignore-whitespace"
