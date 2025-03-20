@@ -40,7 +40,9 @@ pub fn apply_patches(
     patch_files: &[std::path::PathBuf],
 ) -> Result<()> {
     // Use 3way patch apply by default
-    let mut command = "git am --3way --whitespace=nowarn --ignore-whitespace".to_string();
+    let mut command =
+        "git am --committer-date-is-author-date --3way --whitespace=nowarn --ignore-whitespace"
+            .to_string();
 
     // Is it any faster to apply more than one patch at a time?
     for p in patch_files {
