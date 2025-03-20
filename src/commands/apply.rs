@@ -12,9 +12,9 @@ fn process_stack(base_path: &std::path::Path, stack_config: &StackConfig) -> Res
 
     // Read in series file
     let mut series = Series::new(output_dir);
-    series.from_file()?;
+    series.populate()?;
 
-    git_apply_patches(&output_dir, series.patch_files())
+    git_apply_patches(output_dir, series.patch_files())
 }
 
 pub fn apply_patches(base_path: &std::path::Path, options: &Options) -> Result<()> {
@@ -23,7 +23,7 @@ pub fn apply_patches(base_path: &std::path::Path, options: &Options) -> Result<(
     enter_detached()?;
 
     for stack in &options.stacks {
-        process_stack(&base_path, &stack)?;
+        process_stack(base_path, stack)?;
     }
 
     Ok(())

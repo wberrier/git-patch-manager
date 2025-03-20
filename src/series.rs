@@ -20,7 +20,7 @@ impl Series {
         }
     }
 
-    pub fn to_file(&self) -> Result<()> {
+    pub fn persist(&self) -> Result<()> {
         let mut output: String = "".to_string();
 
         for file in &self.patch_files {
@@ -32,12 +32,12 @@ impl Series {
         Ok(())
     }
 
-    pub fn from_paths(&mut self, paths: &[std::path::PathBuf]) -> Result<()> {
+    pub fn set_patch_files(&mut self, paths: &[std::path::PathBuf]) -> Result<()> {
         self.patch_files = paths.to_owned();
         Ok(())
     }
 
-    pub fn from_text(&mut self, text: &str) -> Result<()> {
+    pub fn populate_from_text(&mut self, text: &str) -> Result<()> {
         for line in text.split('\n') {
             // Remove everything past a comment character
             let mut_line = everything_before(line, "#").trim().to_string();
@@ -50,11 +50,14 @@ impl Series {
         Ok(())
     }
 
-    pub fn from_file(&mut self) -> Result<()> {
+    pub fn populate(&mut self) -> Result<()> {
         if let Ok(lines) = std::fs::read_to_string(&self.filepath) {
-            self.from_text(lines.as_str())
+            self.populate_from_text(lines.as_str())
         } else {
-            Err(anyhow::anyhow!("unable to read series file: {:?}", self.filepath))
+            Err(anyhow::anyhow!(
+                "unable to read series file: {:?}",
+                self.filepath
+            ))
         }
     }
 

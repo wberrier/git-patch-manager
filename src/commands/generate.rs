@@ -14,7 +14,7 @@ fn process_stack(
 
     src_dir.push(stack_config.src_path.clone());
 
-    let patches = format_patches(base_branch, &src_dir, &output_dir)?;
+    let patches = format_patches(base_branch, &src_dir, output_dir)?;
 
     // Generate the series file (if there are any)
     if !patches.is_empty() {
@@ -32,9 +32,8 @@ fn process_stack(
             })
             .collect();
 
-        series.from_paths(&new_patches)?;
-        series.to_file()?;
-
+        series.set_patch_files(&new_patches)?;
+        series.persist()?;
     } else {
         // Make sure that some patches were generated
         bail!("no patches generated from: {:?}", stack_config.src_path)
@@ -45,7 +44,7 @@ fn process_stack(
 
 pub fn generate_patches(base_path: &std::path::Path, options: &Options) -> Result<()> {
     for stack in &options.stacks {
-        process_stack(&base_path, &stack, &options.base_branch)?;
+        process_stack(base_path, stack, &options.base_branch)?;
     }
 
     Ok(())
