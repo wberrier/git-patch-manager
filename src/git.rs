@@ -2,7 +2,7 @@
 
 // If necessary, eventually we could use git2 crate for a more programmatic approach
 
-use anyhow::{bail, Result};
+use anyhow::Result;
 
 use shleazy::*;
 
@@ -39,9 +39,10 @@ pub fn apply_patches(
     patch_directory: &std::path::Path,
     patch_files: &[std::path::PathBuf],
 ) -> Result<()> {
-    // bail, otherwise git-am waits for a patch on stdin
+    // return, otherwise git-am waits for a patch on stdin
     if patch_files.is_empty() {
-        bail!("no patches to apply");
+        println!("Warning: no patches to apply");
+        return Ok(());
     }
 
     // Use 3way patch apply by default
